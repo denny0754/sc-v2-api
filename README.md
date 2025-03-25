@@ -222,6 +222,43 @@ except SCV2InvalidEndpointException as e:
 - Python 3.9+
 - Works with SAP Sales and Service Cloud V2 API
 
+## Current Features
+
+Features already implemented in this library:
+
+- **Core API Wrapper**: Complete wrapper for the SAP Sales/Service Cloud V2 API
+- **Fluent Request Builder**: Builder pattern for constructing complex API requests
+- **Service-Specific Endpoints**: Structured organization of services and endpoints
+- **Client-Side Batching**: Execute multiple requests concurrently
+- **Request Dependencies**: Chain requests with dependencies on previous results
+- **Robust Error Handling**: Specific exception types for different error scenarios
+- **Session Management**: Persistent session handling with connection pooling
+- **Context Manager Support**: Use the library with Python's `with` statement
+- **Comprehensive Parameter Support**: OData query parameters with dedicated methods
+
+## Roadmap
+
+Future planned enhancements for this library:
+
+- **Additional Services**: Expand support for more SAP Sales/Service Cloud V2 API services as they become available
+- **Response Models**: Type-hinted response models for better developer experience
+- **Pagination Helpers**: Automatic handling of paginated responses
+- **Retry Mechanisms**: Intelligent retry logic for failed requests
+- **Webhooks**: Support for webhook implementation
+- **CLI Tool**: Command-line interface for quick API interactions
+- **PyPI Release**: Make the package installable via pip
+- **Type-Safe Entity Models**: Pydantic models representing service entities for validation and serialization
+- **Async Support**: Async versions of API methods using aiohttp or httpx for non-blocking operations
+- **Response Caching**: LRU caching with configurable TTL for frequently requested data
+- **Export/Import Functionality**: Tools to help users export/import data between environments
+- **Schema Discovery**: Methods to programmatically discover available fields and relationships
+- **Mock API Mode**: Testing mode that simulates API responses without making real calls
+- **Bulk Data Operations**: Tools for efficiently loading/updating large datasets
+- **Change Tracking**: Features to detect and reconcile changes between local objects and remote API state
+- **Automatic ETag Management**: Streamlined handling of ETags for optimistic concurrency control
+- **Data Validation Helpers**: Functions to validate data against API constraints before sending requests
+- **Framework Integrations**: Adapters for Django, FastAPI, Flask to simplify integration
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
