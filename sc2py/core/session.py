@@ -2,11 +2,11 @@ import requests
 
 from functools import lru_cache
 
-from scv2_api.services import SCV2BaseEndpoint, SCV2Service, InternalAPIEndpointSanitizer
+from sc2py.services import SCV2BaseEndpoint, SCV2Service, InternalAPIEndpointSanitizer
 
-from scv2_api.exceptions import SCV2InvalidEndpointException, SCV2ConnectionError, SCV2RequestError, SCV2TimeoutError
+from sc2py.exceptions import SCV2InvalidEndpointException, SCV2ConnectionError, SCV2RequestError, SCV2TimeoutError
 
-from scv2_api.core.request import SCV2Request, SCV2QueryParameterType, SCV2RequestType
+from sc2py.core.request import SCV2Request, SCV2QueryParameterType, SCV2RequestType
 
 class SCV2Session:
 

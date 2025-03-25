@@ -1,6 +1,6 @@
 from typing import Type, Dict
 
-from scv2_api.services import *
+from sc2py.services import *
 
 class InternalAPIEndpointSanitizer:
 

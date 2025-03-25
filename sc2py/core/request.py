@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Dict, Any, Optional, List, Union
-from scv2_api.services.base import SCV2Service, SCV2BaseEndpoint
+from sc2py.services.base import SCV2Service, SCV2BaseEndpoint
 
 class SCV2RequestType(Enum):
     GET = 'GET'
