@@ -6,6 +6,8 @@ from scv2_api.services import SCV2BaseEndpoint, SCV2Service, InternalAPIEndpoint
 
 from scv2_api.exceptions import SCV2InvalidEndpointException, SCV2ConnectionError, SCV2RequestError, SCV2TimeoutError
 
+from scv2_api.core.request import SCV2Request, SCV2QueryParameterType, SCV2RequestType
+
 class SCV2Session:
 
     # This must be set to the full domain name of the tenant.
@@ -246,5 +248,75 @@ class SCV2Session:
 
         return response
 
+
+
     def close(self):
         self.__sc_session.close()
+
+    def from_request(self, request: SCV2Request) -> requests.Response:
+        """
+        Execute a request created with SCV2RequestBuilder.
+        
+        Args:
+            request: The SCV2Request object to execute
+            
+        Returns:
+            Response from the API
+        """
+        # Validate the request
+        if not isinstance(request, SCV2Request):
+            raise ValueError("Expected an SCV2Request object")
+            
+        # Call the appropriate method based on the request type
+        if request.request_type == SCV2RequestType.GET:
+            # Extract parameters from the request for GET
+            filter_param = request.params.get(SCV2QueryParameterType.FILTER.value)
+            select_param = request.params.get(SCV2QueryParameterType.SELECT.value)
+            orderby_param = request.params.get(SCV2QueryParameterType.ORDERBY.value)
+            search_param = request.params.get(SCV2QueryParameterType.SEARCH.value)
+            top_param = request.params.get(SCV2QueryParameterType.TOP.value)
+            skip_param = request.params.get(SCV2QueryParameterType.SKIP.value)
+            exclude_param = request.params.get(SCV2QueryParameterType.EXCLUDE.value)
+            
+            return self.get(
+                service=request.service,
+                endpoint=request.endpoint,
+                resource_id=request.resource_id,
+                filter=filter_param,
+                select=select_param,
+                orderby=orderby_param,
+                search=search_param,
+                top=top_param,
+                skip=skip_param,
+                exclude=exclude_param
+            )
+        elif request.request_type == SCV2RequestType.POST:
+            return self.post(
+                service=request.service,
+                endpoint=request.endpoint,
+                payload=request.payload
+            )
+        elif request.request_type == SCV2RequestType.PATCH:
+            etag = request.headers.get('If-Match')
+            return self.patch(
+                service=request.service,
+                endpoint=request.endpoint,
+                resource_id=request.resource_id,
+                payload=request.payload,
+                etag=etag
+            )
+        elif request.request_type == SCV2RequestType.PUT:
+            return self.put(
+                service=request.service,
+                endpoint=request.endpoint,
+                resource_id=request.resource_id,
+                payload=request.payload
+            )
+        elif request.request_type == SCV2RequestType.DELETE:
+            return self.delete(
+                service=request.service,
+                endpoint=request.endpoint,
+                resource_id=request.resource_id
+            )
+        else:
+            raise ValueError(f"Unsupported request type: {request.request_type}")
