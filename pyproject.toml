@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scv2_api"
+version = "0.1.0"
+description = "SAP Sales/Service Cloud V2 API Wrapper"
+authors = [{name = "Diego Vaccher", email = "dvaccher99@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.25.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/denny0754/scv2_api"
+"Bug Tracker" = "https://github.com/denny0754/scv2_api/issues"
+
+[tool.pytest]
+testpaths = ["tests"]

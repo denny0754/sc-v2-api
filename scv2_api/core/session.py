@@ -1,10 +1,10 @@
 import requests
 
-from functools import cache, lru_cache
+from functools import lru_cache
 
-from .services import SCV2BaseEndpoint, SCV2Service, InternalAPIEndpointSanitizer
+from scv2_api.services import SCV2BaseEndpoint, SCV2Service, InternalAPIEndpointSanitizer
 
-from .exception import SCV2InvalidEndpointException, SCV2ConnectionError, SCV2RequestError, SCV2TimeoutError
+from scv2_api.exceptions import SCV2InvalidEndpointException, SCV2ConnectionError, SCV2RequestError, SCV2TimeoutError
 
 class SCV2Session:
 

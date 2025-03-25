@@ -1,5 +1,4 @@
-
-from .services import SCV2Service, SCV2BaseEndpoint
+from scv2_api.services import SCV2Service, SCV2BaseEndpoint
 
 class SCV2BatchRequestBuilder:
 
