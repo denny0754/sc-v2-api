@@ -7,12 +7,12 @@ A Python library for interacting with the SAP Sales/Service Cloud V2 API.
 __version__ = '0.1.0'
 
 # Import public API classes
-from scv2_api.core.session import SCV2Session
-from scv2_api.core.request import SCV2Request, SCV2RequestBuilder, SCV2RequestType
-from scv2_api.core.batch import SCV2ClientBatchRequest
+from scv2py.core.session import SCV2Session
+from scv2py.core.request import SCV2Request, SCV2RequestBuilder, SCV2RequestType
+from scv2py.core.batch import SCV2ClientBatchRequest
 
 # Import service definitions
-from scv2_api.services import (
+from scv2py.services import (
     SCV2Service,
     SalesTerritoryServiceEndpoint,
     CollectionsIntegrationServiceEndpoint,
@@ -21,7 +21,7 @@ from scv2_api.services import (
 )
 
 # Import exceptions
-from scv2_api.exceptions import (
+from scv2py.exceptions import (
     SCV2InvalidEndpointException,
     SCV2ConnectionError,
     SCV2RequestError,
