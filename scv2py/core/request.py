@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Dict, Any, Optional, List, Union
-from sc2py.services.base import SCV2Service, SCV2BaseEndpoint
+from scv2py.services.base import SCV2Service, SCV2BaseEndpoint
 
 class SCV2RequestType(Enum):
     GET = 'GET'
@@ -24,10 +24,11 @@ class SCV2Request:
     Represents a request to the SAP Sales/Service Cloud V2 API.
     This class holds all the necessary information to make a request.
     """
+
     def __init__(self, 
                  request_type: SCV2RequestType,
                  service: SCV2Service,
-                 endpoint: SCV2BaseEndpoint,
+                 endpoint: str,
                  resource_id: Optional[str] = None,
                  params: Optional[Dict[str, Any]] = None,
                  payload: Optional[Dict[str, Any]] = None,
@@ -44,6 +45,19 @@ class SCV2RequestBuilder:
     """
     Builder for creating SCV2Request objects with a fluent interface.
     """
+
+    __request_type : SCV2RequestType
+    __service : SCV2Service
+    __endpoint : SCV2Service
+    __template_endpoint : str
+    __formatted_endpoint : str
+    __resource_id : Optional[str] = None
+    __params : Optional[Dict[str, Any]] = None
+    __payload : Optional[Dict[str, Any]] = None
+    __headers : Optional[Dict[str, Any]] = None
+    __is_custom : bool = False
+    __path_params : Optional[Dict[str, Any]] = None
+    
     def __init__(self):
         self.__request_type = None
         self.__service = None
@@ -52,35 +66,76 @@ class SCV2RequestBuilder:
         self.__params = {}
         self.__payload = None
         self.__headers = {}
+        self.__is_custom = False
+        self.__path_params = { }
 
-    def get(self, service: SCV2Service, endpoint: SCV2BaseEndpoint) -> "SCV2RequestBuilder":
-        self.__request_type = SCV2RequestType.GET
+    def __make_request(self, service : SCV2Service, endpoint : SCV2BaseEndpoint, request_type : SCV2RequestType) -> "SCV2RequestBuilder":
+        self.__request_type = request_type
         self.__service = service
         self.__endpoint = endpoint
+
+        if(not self.__endpoint.value.get(self.__request_type.value, None)):
+            raise ValueError(f"Endpoint doesn't support {self.__request_type.value} method. Supported methods are: {','.join(self.__endpoint.value.keys())}")
+        
+        self.__template_endpoint = self.__endpoint.value.get(self.__request_type.value)
+
+        return self
+
+    def get(self, service: SCV2Service, endpoint: SCV2BaseEndpoint) -> "SCV2RequestBuilder":
+
+        self.__make_request(
+            service=service,
+            endpoint=endpoint,
+            request_type = SCV2RequestType.GET
+        )
+
         return self
 
     def post(self, service: SCV2Service, endpoint: SCV2BaseEndpoint) -> "SCV2RequestBuilder":
-        self.__request_type = SCV2RequestType.POST
-        self.__service = service
-        self.__endpoint = endpoint
+        self.__make_request(
+            service=service,
+            endpoint=endpoint,
+            request_type = SCV2RequestType.POST
+        )
+
         return self
 
     def patch(self, service: SCV2Service, endpoint: SCV2BaseEndpoint) -> "SCV2RequestBuilder":
-        self.__request_type = SCV2RequestType.PATCH
-        self.__service = service
-        self.__endpoint = endpoint
+        self.__make_request(
+            service=service,
+            endpoint=endpoint,
+            request_type = SCV2RequestType.PATCH
+        )
+
         return self
 
     def put(self, service: SCV2Service, endpoint: SCV2BaseEndpoint) -> "SCV2RequestBuilder":
-        self.__request_type = SCV2RequestType.PUT
-        self.__service = service
-        self.__endpoint = endpoint
+        self.__make_request(
+            service=service,
+            endpoint=endpoint,
+            request_type = SCV2RequestType.PUT
+        )
+
         return self
 
     def delete(self, service: SCV2Service, endpoint: SCV2BaseEndpoint) -> "SCV2RequestBuilder":
-        self.__request_type = SCV2RequestType.DELETE
-        self.__service = service
-        self.__endpoint = endpoint
+        self.__make_request(
+            service=service,
+            endpoint=endpoint,
+            request_type = SCV2RequestType.DELETE
+        )
+
+        return self
+
+    def with_custom_endpoint(self, request_type : SCV2RequestType, custom_endpoint : str):
+        self.__request_type = request_type
+        self.__template_endpoint = custom_endpoint
+        self.__endpoint = None
+        self.__service = None
+        self.__is_custom = True
+
+    def with_path_param(self, param_name : str, value : Any) -> "SCV2RequestBuilder":
+        self.__path_params[param_name] = value
         return self
 
     def with_resource_id(self, resource_id: str) -> "SCV2RequestBuilder":
@@ -150,13 +205,15 @@ class SCV2RequestBuilder:
         return self
 
     def build(self) -> SCV2Request:
+        
+        try:
+            self.__formatted_endpoint = self.__template_endpoint.format(**self.__path_params)
+        except KeyError as e:
+            raise ValueError(f"Missing required path parameter: {e}")
+
         # Validate the configuration
         if not self.__request_type:
             raise ValueError("Request type is required")
-        if not self.__service:
-            raise ValueError("Service is required")
-        if not self.__endpoint:
-            raise ValueError("Endpoint is required")
 
         # Additional validation based on request type
         if self.__request_type in [SCV2RequestType.PATCH, SCV2RequestType.DELETE]:
@@ -173,7 +230,7 @@ class SCV2RequestBuilder:
         return SCV2Request(
             request_type=self.__request_type,
             service=self.__service,
-            endpoint=self.__endpoint,
+            endpoint=self.__formatted_endpoint,
             resource_id=self.__resource_id,
             params=self.__params,
             payload=self.__payload,

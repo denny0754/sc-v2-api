@@ -4,4 +4,12 @@ class AccountServiceEndpoint(SCV2BaseEndpoint):
     """
     Endpoints available in the Account Service.
     """
-    ACCOUNT = 'accounts'
+    ACCOUNTS : dict = {
+        'GET': 'accounts',
+        'POST': 'accounts'
+    }
+
+    ACCOUNT : dict = {
+        'GET': 'accounts/{id}',
+        'PATCH': 'accounts/{id}'
+    }
