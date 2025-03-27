@@ -1,4 +1,4 @@
-from sc2py.services.base import SCV2BaseEndpoint
+from scv2py.services.base import SCV2BaseEndpoint
 
 class CollectionsIntegrationServiceEndpoint(SCV2BaseEndpoint):
     """
